@@ -6,7 +6,8 @@ services:
     restart: unless-stopped
     init: true
     ports:
-      - "80:80"
+      # Port de l'hôte (8080 par défaut) ; nginx écoute sur 80 dans le conteneur.
+      - "${SITE_PORT:-8080}:80"
     environment:
       # Délai (en secondes) entre deux vérifications des dossiers montés ; 0 = au démarrage seulement.
       MANIFEST_REFRESH: "30"

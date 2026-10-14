@@ -1,13 +1,13 @@
 # CLAUDE.md
 
-Static showcase and download site for Arena TPS, served on the LAN at `http://tpsarena.local`.
+Static showcase and download site for Arena TPS, served on the LAN at `http://tpsarena.local:8080`.
 The README, UI text and commit messages are in French.
 
 ## Commands
 
 - `npm run dev`: Vite dev server. A plugin in `vite.config.ts` serves `/manifest.json`, `/releases/` and `/screenshots/` from the local folders, like the container does.
 - `npm run build`: `tsc --noEmit`, then the Vite build into `dist/`.
-- `docker compose up -d --build`: production (nginx on port 80).
+- `docker compose up -d --build`: production (host port `SITE_PORT`, default 8080; nginx listens on 80 inside the container).
 
 ## Architecture
 

@@ -2,7 +2,7 @@
 
 Site vitrine et de téléchargement d'**Arena TPS**, jeu de tir multijoueur à la troisième
 personne (Godot 4.7.2) dans le quartier néo-japonais « NEO-EDO ». Le site est servi sur le
-réseau local à l'adresse **http://tpsarena.local**. Il est entièrement statique et n'a
+réseau local à l'adresse **http://tpsarena.local:8080**. Il est entièrement statique et n'a
 aucun lien avec le back du jeu.
 
 - React + Vite + TypeScript, sans framework CSS.
@@ -17,7 +17,7 @@ Sur la machine hôte (Debian 13) :
 
 - **Docker** avec le plugin Compose (`docker compose version`) ;
 - **Avahi** pour le nom `tpsarena.local` (voir plus bas) ;
-- le **port 80** libre.
+- le **port 8080** libre (modifiable, voir « Changer de port »).
 
 Pour développer : Node.js 24 ou plus récent.
 
@@ -53,8 +53,19 @@ cd TPSArena_Site
 docker compose up -d --build
 ```
 
-Le site répond sur `http://<ip-de-la-machine>/` et, une fois Avahi configuré, sur
-**http://tpsarena.local**. Pour suivre les journaux : `docker compose logs -f`.
+Le site répond sur `http://<ip-de-la-machine>:8080/` et, une fois Avahi configuré, sur
+**http://tpsarena.local:8080**. Pour suivre les journaux : `docker compose logs -f`.
+
+### Changer de port
+
+Le port publié est 8080 par défaut : le port 80 est souvent déjà pris sur la machine, et
+le back du jeu utilise 8000 à 8005 et 8025. Pour en choisir un autre, créer un fichier
+`.env` à côté de `compose.yaml` (ignoré par Git) :
+
+```sh
+echo "SITE_PORT=8090" > .env
+docker compose up -d
+```
 
 ## Ajouter ou mettre à jour un build
 
@@ -194,14 +205,14 @@ En développement, Vite imite le conteneur : il sert `/manifest.json`, `/release
 
 **La page ne s'ouvre pas avec l'adresse IP.**
 - `docker compose ps` : le conteneur doit être `running (healthy)`.
-- `curl -I http://localhost/` sur l'hôte.
-- Pare-feu de l'hôte : ouvrir le port 80.
+- `curl -I http://localhost:8080/` sur l'hôte.
+- Pare-feu de l'hôte : ouvrir le port 8080.
   ```sh
-  sudo ufw allow 80/tcp            # avec ufw
-  sudo nft list ruleset | grep 80  # avec nftables, vérifier les règles
+  sudo ufw allow 8080/tcp            # avec ufw
+  sudo nft list ruleset | grep 8080  # avec nftables, vérifier les règles
   ```
-- Le port 80 est déjà pris (`sudo ss -ltnp | grep ':80 '`) : arrêter l'autre service,
-  ou changer le port publié dans `compose.yaml` (`"8080:80"`).
+- Le port 8080 est déjà pris (`sudo ss -ltnp | grep ':8080 '`) : arrêter l'autre service,
+  ou choisir un autre port avec `SITE_PORT` (voir « Changer de port »).
 
 **L'adresse IP marche, mais pas `tpsarena.local`.**
 - Sur l'hôte : `systemctl status avahi-daemon` (et `tpsarena-alias` pour la méthode 2),
