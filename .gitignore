@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Builds du jeu et captures : copiés à la main sur l'hôte, jamais versionnés.
+releases/*/*
+!releases/*/.gitkeep
+screenshots/*
+!screenshots/.gitkeep

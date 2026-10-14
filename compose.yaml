@@ -1,0 +1,15 @@
+services:
+  site:
+    build: .
+    image: arena-tps-site:latest
+    container_name: arena-tps-site
+    restart: unless-stopped
+    init: true
+    ports:
+      - "80:80"
+    environment:
+      # Délai (en secondes) entre deux vérifications des dossiers montés ; 0 = au démarrage seulement.
+      MANIFEST_REFRESH: "30"
+    volumes:
+      - ./releases:/srv/releases:ro
+      - ./screenshots:/srv/screenshots:ro
