@@ -2,7 +2,7 @@
 
 Site vitrine et de téléchargement d'**Arena TPS**, jeu de tir multijoueur à la troisième
 personne (Godot 4.7.2) dans le quartier néo-japonais « NEO-EDO ». Le site est servi sur le
-réseau local à l'adresse **http://tpsarena.local:8080**. Il est entièrement statique et n'a
+réseau local à l'adresse **http://<ip-de-la-machine>:8080**. Il est entièrement statique et n'a
 aucun lien avec le back du jeu.
 
 - React + Vite + TypeScript, sans framework CSS.
@@ -16,7 +16,6 @@ aucun lien avec le back du jeu.
 Sur la machine hôte (Debian 13) :
 
 - **Docker** avec le plugin Compose (`docker compose version`) ;
-- **Avahi** pour le nom `tpsarena.local` (voir plus bas) ;
 - le **port 8080** libre (modifiable, voir « Changer de port »).
 
 Pour développer : Node.js 24 ou plus récent.
@@ -35,7 +34,6 @@ TPSArena_Site/
 │   ├── nginx.conf           Configuration du serveur web
 │   ├── security-headers.conf
 │   └── 40-arena-manifest.sh Script d'entrée : génère manifest.json
-├── deploy/avahi/            Alias mDNS tpsarena.local (service systemd)
 ├── releases/                ← builds du jeu (non versionnés)
 │   ├── windows/             ArenaTPS.exe
 │   ├── linux/               ArenaTPS.x86_64
@@ -53,8 +51,17 @@ cd TPSArena_Site
 docker compose up -d --build
 ```
 
-Le site répond sur `http://<ip-de-la-machine>:8080/` et, une fois Avahi configuré, sur
-**http://tpsarena.local:8080**. Pour suivre les journaux : `docker compose logs -f`.
+Le site répond sur **`http://<ip-de-la-machine>:8080/`**. Pour suivre les journaux :
+`docker compose logs -f`.
+
+Pour connaître l'adresse IP à communiquer aux joueurs :
+
+```sh
+hostname -I | awk '{print $1}'
+```
+
+Sur un réseau en DHCP (Wi-Fi de l'école notamment), cette adresse peut changer d'un jour
+à l'autre : la vérifier avant chaque séance.
 
 ### Changer de port
 
@@ -130,107 +137,6 @@ docker compose up -d --build
 
 Les builds et les captures restent sur l'hôte : ils ne sont pas touchés.
 
-## Nom `tpsarena.local` (mDNS avec Avahi)
-
-Les noms en `.local` sont résolus par **mDNS** sur le réseau local, sans serveur DNS.
-Windows 10/11, macOS et la plupart des Linux de bureau savent les résoudre sans
-configuration. Sur l'hôte Debian :
-
-```sh
-sudo apt install avahi-daemon avahi-utils
-sudo systemctl enable --now avahi-daemon
-```
-
-Avec Docker, limiter Avahi à l'interface réseau réelle (voir « À savoir » plus bas) :
-
-```sh
-ip -br addr                       # repérer l'interface : wlp2s0 (Wi-Fi), enp3s0 (câble)…
-sudo sed -i 's/^#\?allow-interfaces=.*/allow-interfaces=wlp2s0/' /etc/avahi/avahi-daemon.conf
-grep -q '^allow-interfaces=' /etc/avahi/avahi-daemon.conf \
-  || sudo sed -i '/^\[server\]/a allow-interfaces=wlp2s0' /etc/avahi/avahi-daemon.conf
-sudo systemctl restart avahi-daemon
-```
-
-Puis choisir **une** des deux méthodes.
-
-### Méthode 1 : renommer la machine (la plus simple)
-
-Avahi publie automatiquement `<nom-d-hôte>.local` et suit les changements d'adresse IP.
-
-```sh
-sudo hostnamectl set-hostname tpsarena
-sudo sed -i 's/^127\.0\.1\.1.*/127.0.1.1\ttpsarena/' /etc/hosts
-sudo systemctl restart avahi-daemon
-```
-
-### Méthode 2 : garder le nom de la machine et ajouter un alias
-
-Le service fourni publie `tpsarena.local` vers l'adresse IP actuelle de la machine (il a
-besoin d'`avahi-publish`, du paquet `avahi-utils`) :
-
-```sh
-sudo apt install avahi-utils
-sudo install -m 755 deploy/avahi/tpsarena-alias.sh /usr/local/bin/
-sudo install -m 644 deploy/avahi/tpsarena-alias.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now tpsarena-alias
-```
-
-Le service démarre ensuite tout seul à chaque démarrage de la machine.
-
-- **Changement d'adresse IP.** L'adresse est lue au démarrage du service, pas suivie
-  ensuite. Après un changement de réseau Wi-Fi ou un nouveau bail DHCP (fréquent sur le
-  Wi-Fi de l'école), relancer le service :
-  ```sh
-  sudo systemctl restart tpsarena-alias
-  journalctl -u tpsarena-alias -n 5    # affiche « Publication de tpsarena.local -> <ip> »
-  ```
-- **Mise à jour du script ou du service** (après un `git pull`) : refaire les deux
-  `sudo install`, puis `sudo systemctl daemon-reload` et `sudo systemctl restart tpsarena-alias`.
-- **Tout retirer :**
-  ```sh
-  sudo systemctl disable --now tpsarena-alias
-  sudo rm /etc/systemd/system/tpsarena-alias.service /usr/local/bin/tpsarena-alias.sh
-  sudo systemctl daemon-reload
-  ```
-
-### Vérifier
-
-```sh
-avahi-resolve -n tpsarena.local          # sur l'hôte ou un autre Linux
-```
-
-Sous Windows (PowerShell) : `Resolve-DnsName tpsarena.local`, ou `ping tpsarena.local`.
-Sous macOS : `dns-sd -G v4 tpsarena.local`.
-
-Le nom ne porte pas le port : l'adresse complète reste **http://tpsarena.local:8080**.
-
-### À savoir
-
-- **Conflit de nom à cause de Docker.** Sans `allow-interfaces`, Avahi s'annonce aussi
-  sur les réseaux internes de Docker (`docker0`, `br-…`). Il peut alors croire que son nom
-  est déjà pris et se renommer tout seul en `<nom>-2.local`, avec une adresse Docker
-  (172.17–172.23.x.x) que les autres postes ne peuvent pas joindre. Pour connaître le nom
-  réellement publié :
-  ```sh
-  busctl call org.freedesktop.Avahi / org.freedesktop.Avahi.Server GetHostNameFqdn
-  ```
-  Si l'hôte passe du Wi-Fi au câble, ajouter l'interface filaire :
-  `allow-interfaces=wlp2s0,enp3s0`.
-- **Résolution lente (5 s) sur un poste Linux.** Avant chaque recherche en `.local`,
-  `libnss-mdns` interroge le serveur DNS normal. Si le premier serveur DNS du réseau ne
-  répond pas (c'est le cas du Wi-Fi `CFAINSTA_STUDENTS`), chaque recherche attend 5 s,
-  mais finit par aboutir. Windows et macOS ne sont pas concernés. Pour le vérifier, puis
-  utiliser des DNS publics sur cette connexion seulement :
-  ```sh
-  nmcli -t -f IP4.DNS device show wlp2s0          # serveurs DNS reçus du réseau
-  dig +tries=1 +time=3 @<premier-serveur> debian.org   # « timed out » = serveur muet
-  nmcli connection modify CFAINSTA_STUDENTS ipv4.ignore-auto-dns yes ipv4.dns "8.8.8.8 1.1.1.1"
-  nmcli connection up CFAINSTA_STUDENTS
-  ```
-  Pour revenir aux DNS du réseau :
-  `nmcli connection modify CFAINSTA_STUDENTS ipv4.ignore-auto-dns no ipv4.dns ""`.
-
 ## Développement
 
 ```sh
@@ -268,24 +174,6 @@ En développement, Vite imite le conteneur : il sert `/manifest.json`, `/release
   ```
 - Le port 8080 est déjà pris (`sudo ss -ltnp | grep ':8080 '`) : arrêter l'autre service,
   ou choisir un autre port avec `SITE_PORT` (voir « Changer de port »).
-
-**L'adresse IP marche, mais pas `tpsarena.local`.**
-- Sur l'hôte : `systemctl status avahi-daemon` (et `tpsarena-alias` pour la méthode 2),
-  puis `avahi-resolve -n tpsarena.local`.
-- Le nom publié a pris un suffixe (`-2`) ou pointe vers une adresse Docker : voir
-  « À savoir » dans la section sur le nom `tpsarena.local`.
-- Méthode 2 : l'adresse IP de l'hôte a changé depuis le démarrage du service :
-  `sudo systemctl restart tpsarena-alias`.
-- Le pare-feu de l'hôte doit laisser passer **mDNS** : `sudo ufw allow 5353/udp`.
-- Le client et l'hôte doivent être sur le **même réseau local** (même sous-réseau) : mDNS
-  ne traverse pas les routeurs.
-- Certains réseaux Wi-Fi (écoles, entreprises, invités) isolent les appareils ou bloquent
-  le multicast : mDNS ne passe pas. Utiliser alors l'adresse IP (`hostname -I` sur l'hôte).
-- Windows : le réseau doit être en profil **Privé** (Paramètres → Réseau et Internet).
-- Linux client : installer `avahi-daemon` et `libnss-mdns` (`mdns4_minimal` dans la ligne
-  `hosts:` de `/etc/nsswitch.conf`). Si la page met 5 s à s'ouvrir, voir « Résolution
-  lente » dans « À savoir ».
-- Un VPN actif sur le client peut empêcher la résolution.
 
 **Un téléchargement manque ou affiche une vieille version.**
 - `docker compose exec site cat /usr/share/nginx/html/manifest.json`

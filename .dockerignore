@@ -2,7 +2,6 @@ node_modules
 dist
 releases
 screenshots
-deploy
 .git
 *.log
 README.md

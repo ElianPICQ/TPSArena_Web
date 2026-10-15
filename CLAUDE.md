@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Static showcase and download site for Arena TPS, served on the LAN at `http://tpsarena.local:8080`.
+Static showcase and download site for Arena TPS, served on the LAN at `http://<host-ip>:8080` (no local name: mDNS does not pass on the school Wi-Fi).
 The README, UI text and commit messages are in French.
 
 ## Commands
