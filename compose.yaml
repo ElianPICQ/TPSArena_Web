@@ -1,8 +1,8 @@
 services:
   site:
     build: .
-    image: arena-tps-site:latest
-    container_name: arena-tps-site
+    image: tps-arena-site:latest
+    container_name: tps-arena-site
     restart: unless-stopped
     init: true
     ports:

@@ -1,6 +1,6 @@
-# Arena TPS — site de téléchargement
+# TPS Arena — site de téléchargement
 
-Site vitrine et de téléchargement d'**Arena TPS**, jeu de tir multijoueur à la troisième
+Site vitrine et de téléchargement d'**TPS Arena**, jeu de tir multijoueur à la troisième
 personne (Godot 4.7.2) dans le quartier néo-japonais « NEO-EDO ». Le site est servi sur le
 réseau local à l'adresse **http://<ip-de-la-machine>:8080**. Il est entièrement statique et n'a
 aucun lien avec le back du jeu.
@@ -35,9 +35,9 @@ TPSArena_Site/
 │   ├── security-headers.conf
 │   └── 40-arena-manifest.sh Script d'entrée : génère manifest.json
 ├── releases/                ← builds du jeu (non versionnés)
-│   ├── windows/             ArenaTPS.exe
-│   ├── linux/               ArenaTPS.x86_64
-│   └── macos/               ArenaTPS.zip
+│   ├── windows/             TPSArena.exe
+│   ├── linux/               TPSArena.x86_64
+│   └── macos/               TPSArena.zip
 ├── screenshots/             ← captures d'écran (non versionnées)
 ├── Dockerfile               Build Node, puis service par nginx:alpine
 └── compose.yaml
@@ -81,12 +81,12 @@ Les builds sont produits dans le dépôt du jeu par `tools/build_client.sh`
 
 | Plateforme | Dossier | Fichier attendu |
 |---|---|---|
-| Windows | `releases/windows/` | `ArenaTPS.exe` (PCK intégré) |
-| Linux | `releases/linux/` | `ArenaTPS.x86_64` (PCK intégré) |
-| macOS | `releases/macos/` | `ArenaTPS.zip` (Intel et Apple Silicon, non signé) |
+| Windows | `releases/windows/` | `TPSArena.exe` (PCK intégré) |
+| Linux | `releases/linux/` | `TPSArena.x86_64` (PCK intégré) |
+| macOS | `releases/macos/` | `TPSArena.zip` (Intel et Apple Silicon, non signé) |
 
 ```sh
-cp ../TPSArena_Jeu/client/build/windows/ArenaTPS.exe releases/windows/
+cp ../TPSArena_Jeu/client/build/windows/TPSArena.exe releases/windows/
 ```
 
 Seule la dernière version est proposée : on **remplace** le fichier. Si le nom attendu
@@ -106,7 +106,7 @@ Pour un gros fichier copié par le réseau, le manifeste peut être généré pe
 cet état, copier sous un autre nom puis renommer (`mv` est instantané) :
 
 ```sh
-cp ArenaTPS.exe releases/windows/.ArenaTPS.exe.tmp && mv releases/windows/.ArenaTPS.exe.tmp releases/windows/ArenaTPS.exe
+cp TPSArena.exe releases/windows/.TPSArena.exe.tmp && mv releases/windows/.TPSArena.exe.tmp releases/windows/TPSArena.exe
 ```
 
 Une plateforme sans fichier s'affiche grisée avec « Bientôt disponible ».

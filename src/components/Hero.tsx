@@ -46,7 +46,7 @@ export function Hero({ platform, state }: Props) {
         Quartier <span lang="ja">ネオ江戸</span> · NEO-EDO
       </p>
       <h1 className="hero__title">
-        ARENA <span>TPS</span>
+        TPS <span>ARENA</span>
       </h1>
       <p className="hero__tagline">
         Tir à la troisième personne, chacun pour soi : 16 joueurs, des bots et 3 minutes pour finir en

@@ -33,7 +33,7 @@ export function Nav() {
       </a>
       <div className="nav__inner">
         <a className="nav__brand" href="#accueil" onClick={() => setOpen(false)}>
-          ARENA <span>TPS</span>
+          TPS <span>ARENA</span>
         </a>
         <button
           type="button"
