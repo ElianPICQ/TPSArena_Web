@@ -49,7 +49,7 @@ export function Hero({ platform, state }: Props) {
         ARENA <span>TPS</span>
       </h1>
       <p className="hero__tagline">
-        Tir à la troisième personne, chacun pour soi : 8 joueurs, des bots et 3 minutes pour finir en
+        Tir à la troisième personne, chacun pour soi : 16 joueurs, des bots et 3 minutes pour finir en
         tête, entre temple ancien et néons de Tokyo.
       </p>
       <div className="hero__actions">

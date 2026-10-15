@@ -7,7 +7,11 @@ const CONTROLS: { keys: string[][]; action: string; detail?: string }[] = [
   { keys: [['Espace']], action: 'Sauter' },
   { keys: [['Ctrl'], ['C']], action: 'S’accroupir (maintenir)', detail: 'silhouette plus basse, tir plus précis' },
   { keys: [['R']], action: 'Recharger' },
-  { keys: [['E']], action: 'Capacité de la classe' },
+  { keys: [['1', '2'], ['Molette']], action: 'Arme principale / secondaire' },
+  { keys: [['G']], action: 'Lancer une grenade' },
+  { keys: [['E']], action: 'Capacité du spécialiste' },
+  { keys: [['3']], action: 'Arme spéciale', detail: 'si un bonus d’arme a été ramassé' },
+  { keys: [['F']], action: 'Super-pouvoir', detail: 'si un bonus de super-pouvoir est en réserve' },
   { keys: [['Tab']], action: 'Tableau des scores (maintenir)' },
   { keys: [['Échap']], action: 'Menu pause', detail: 'la partie continue pendant ce temps' },
 ];
@@ -19,7 +23,8 @@ export function Controls() {
         <p className="section__eyebrow">Commandes</p>
         <h2 className="section__title">Clavier et souris</h2>
         <p className="section__lead">
-          Touches d’un clavier AZERTY. Le jeu lit leur position : sur un clavier QWERTY, Z Q S D devient W A S D.
+          Touches par défaut d’un clavier AZERTY (sur QWERTY, Z Q S D devient W A S D). Toutes, sauf Échap,
+          se changent dans Paramètres, onglet Commandes.
         </p>
       </header>
       <div className="panel controls">

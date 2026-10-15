@@ -444,7 +444,6 @@ main {
   padding: clamp(56px, 9vw, 104px) 0 0;
 }
 .section__head {
-  max-width: 760px;
   margin-bottom: 28px;
 }
 .section__eyebrow {
@@ -478,20 +477,25 @@ main {
 
 /* ---------------------------------------------------------------- Accueil */
 
+/* Le titre commence à mi-hauteur de l'écran (sur la ligne d'horizon du fond, à 58 %) :
+   l'accroche (26 px + 14 px de marge) est juste au-dessus, le reste en dessous. */
 .hero {
+  --kicker-h: 40px;
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  padding: calc(var(--nav-h) + 24px) 0 48px;
+  padding: max(calc(var(--nav-h) + 24px), calc(50vh - var(--kicker-h))) 0 48px;
+  padding-top: max(calc(var(--nav-h) + 24px), calc(50svh - var(--kicker-h)));
 }
 .hero__kicker {
   color: var(--magenta);
   font-weight: 700;
   font-size: clamp(14px, 2.4vw, 17px);
+  line-height: 26px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   margin-bottom: 14px;
@@ -593,7 +597,7 @@ main {
 
 .classes {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 .class-card {
@@ -608,6 +612,9 @@ main {
 }
 .class-card--yellow {
   --accent: var(--yellow);
+}
+.class-card--red {
+  --accent: var(--red);
 }
 .class-card__head {
   display: flex;
@@ -664,6 +671,36 @@ main {
   gap: 16px;
   align-items: start;
 }
+.split--even {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.map-jp {
+  color: var(--muted);
+  font-family: 'Noto Sans JP Arena', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
+.chips {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chips li {
+  padding: 2px 10px;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius);
+  background: var(--btn-bg);
+  font-weight: 700;
+  font-size: 16px;
+}
+.keys-line {
+  margin-top: 14px;
+  font-size: 16px;
+}
+.zones.zones--single {
+  grid-template-columns: 1fr;
+}
 .zones {
   margin-top: 14px;
   display: grid;
@@ -686,11 +723,20 @@ main {
   display: grid;
   gap: 16px;
 }
+.modes--three {
+  margin-top: 36px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+}
 .dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   display: inline-block;
+}
+.dot--yellow {
+  background: var(--yellow);
+  box-shadow: 0 0 10px var(--yellow);
 }
 .dot--cyan {
   background: var(--cyan);
@@ -1104,13 +1150,18 @@ button.gallery__item:hover img {
 
 /* ---------------------------------------------------------------- Responsive */
 
+@media (max-width: 1100px) {
+  .classes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (max-width: 960px) {
-  .classes,
   .downloads {
     grid-template-columns: 1fr;
     max-width: 560px;
   }
-  .split {
+  .split,
+  .modes--three {
     grid-template-columns: 1fr;
   }
   .gallery {
@@ -1125,7 +1176,8 @@ button.gallery__item:hover img {
     font-size: 17px;
   }
   .gallery,
-  .zones {
+  .zones,
+  .classes {
     grid-template-columns: 1fr;
   }
   .controls th,
