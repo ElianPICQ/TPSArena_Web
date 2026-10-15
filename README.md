@@ -94,7 +94,7 @@ est absent, le site prend le fichier le plus récent qui a la bonne extension (`
 `.x86_64` ou `.zip`).
 
 Le conteneur vérifie les dossiers toutes les 30 s et régénère `manifest.json` (nom,
-taille, date, SHA-256) dès qu'un fichier change : il suffit de recharger la page. Pour
+taille, date) dès qu'un fichier change : il suffit de recharger la page. Pour
 forcer la mise à jour tout de suite :
 
 ```sh
@@ -102,7 +102,7 @@ docker compose restart
 ```
 
 Pour un gros fichier copié par le réseau, le manifeste peut être généré pendant la copie
-(taille et empreinte fausses) : il est corrigé à la vérification suivante. Pour éviter
+(taille fausse) : il est corrigé à la vérification suivante. Pour éviter
 cet état, copier sous un autre nom puis renommer (`mv` est instantané) :
 
 ```sh

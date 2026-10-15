@@ -11,7 +11,7 @@ The README, UI text and commit messages are in French.
 
 ## Architecture
 
-- `docker/40-arena-manifest.sh` (POSIX sh, BusyBox) runs from the nginx image's `/docker-entrypoint.d/` and writes `manifest.json` (`builds.{windows,linux,macos}` = `{file,size,modified,sha256}` or `null`, plus `screenshots: string[]`). It then polls the mounted folders every `MANIFEST_REFRESH` seconds and regenerates the file when something changed. Keep `vite.config.ts` (dev) and `src/lib/manifest.ts` (types) in sync with it.
+- `docker/40-arena-manifest.sh` (POSIX sh, BusyBox) runs from the nginx image's `/docker-entrypoint.d/` and writes `manifest.json` (`builds.{windows,linux,macos}` = `{file,size,modified}` or `null`, plus `screenshots: string[]`). It then polls the mounted folders every `MANIFEST_REFRESH` seconds and regenerates the file when something changed. Keep `vite.config.ts` (dev) and `src/lib/manifest.ts` (types) in sync with it.
 - `docker/nginx.conf`: `manifest.json` is `no-store`, `/assets/` is immutable, `/releases/` is forced to download. Security headers live in `security-headers.conf` and are included in every location because `add_header` does not inherit.
 - `src/components/NeonBackground.tsx` is a WebGL port of `TPSArena_Jeu/client/front/shaders/menu_background.gdshader`. Keep its constants identical to the Godot shader. The CSS fallback is in `.neon-bg__fallback`.
 - The colors and button styles in `src/styles.css` come from `TPSArena_Jeu/client/front/scripts/ui/ui_theme.gd`. The class and controls content comes from the game's `front/data/classes/*.tres` and README.

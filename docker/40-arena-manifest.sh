@@ -4,10 +4,10 @@
 # Lancé par l'entrée de l'image nginx (/docker-entrypoint.d/) à chaque démarrage du
 # conteneur, puis gardé en tâche de fond : toutes les MANIFEST_REFRESH secondes, il
 # regarde si un fichier a été ajouté, remplacé ou supprimé, et régénère le manifeste
-# seulement dans ce cas (le calcul du SHA-256 des builds prend quelques secondes).
+# seulement dans ce cas.
 # MANIFEST_REFRESH=0 désactive la surveillance : il faut alors `docker compose restart`.
 #
-# Shell POSIX + outils BusyBox (stat, date, sha256sum) : rien à installer.
+# Shell POSIX + outils BusyBox (stat, date) : rien à installer.
 set -eu
 
 RELEASES_DIR="${RELEASES_DIR:-/srv/releases}"
@@ -66,9 +66,8 @@ build_json() {
 	size="$(stat -c %s "$path")"
 	mtime="$(stat -c %Y "$path")"
 	modified="$(date -u -d "@$mtime" +%Y-%m-%dT%H:%M:%SZ)"
-	sha="$(sha256sum "$path" | cut -d ' ' -f 1)"
-	printf '{"file":%s,"size":%s,"modified":"%s","sha256":"%s"}' \
-		"$(json_str "$name")" "$size" "$modified" "$sha"
+	printf '{"file":%s,"size":%s,"modified":"%s"}' \
+		"$(json_str "$name")" "$size" "$modified"
 }
 
 screenshots_json() {

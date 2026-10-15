@@ -6,7 +6,6 @@ export interface Build {
   file: string;
   size: number;
   modified: string;
-  sha256: string;
 }
 
 export interface Manifest {

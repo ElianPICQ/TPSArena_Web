@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
 import type { Connect, Plugin } from 'vite';
@@ -17,30 +16,12 @@ const BUILDS = {
 } as const;
 const IMAGE = /\.(png|jpe?g|webp|avif|gif)$/i;
 
-const hashCache = new Map<string, string>();
-
-function sha256(path: string, key: string): Promise<string> {
-  const cached = hashCache.get(key);
-  if (cached) return Promise.resolve(cached);
-  return new Promise((ok, fail) => {
-    const hash = createHash('sha256');
-    createReadStream(path)
-      .on('data', (chunk) => hash.update(chunk))
-      .on('error', fail)
-      .on('end', () => {
-        const digest = hash.digest('hex');
-        hashCache.set(key, digest);
-        ok(digest);
-      });
-  });
-}
-
 function files(dir: string): string[] {
   if (!existsSync(dir)) return [];
   return readdirSync(dir).filter((name) => !name.startsWith('.') && statSync(join(dir, name)).isFile());
 }
 
-async function build(platform: keyof typeof BUILDS) {
+function build(platform: keyof typeof BUILDS) {
   const dir = join(RELEASES, platform);
   const [expected, ext] = BUILDS[platform];
   const candidates = files(dir).filter((name) => name.endsWith(ext));
@@ -54,7 +35,6 @@ async function build(platform: keyof typeof BUILDS) {
     file: name,
     size: stat.size,
     modified: new Date(Math.floor(stat.mtimeMs / 1000) * 1000).toISOString().replace('.000Z', 'Z'),
-    sha256: await sha256(path, `${path}:${stat.size}:${stat.mtimeMs}`),
   };
 }
 
@@ -80,13 +60,13 @@ function localReleases(): Plugin {
   return {
     name: 'arena-local-releases',
     configureServer(server) {
-      server.middlewares.use('/manifest.json', async (_req, res) => {
+      server.middlewares.use('/manifest.json', (_req, res) => {
         const manifest = {
           generated: new Date().toISOString(),
           builds: {
-            windows: await build('windows'),
-            linux: await build('linux'),
-            macos: await build('macos'),
+            windows: build('windows'),
+            linux: build('linux'),
+            macos: build('macos'),
           },
           screenshots: files(SCREENSHOTS).filter((name) => IMAGE.test(name)).sort(),
         };

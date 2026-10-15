@@ -4,7 +4,7 @@ import { CheckIcon, CopyIcon } from './Icons';
 
 interface Props {
   text: string;
-  /** Ce qui est copié, pour les lecteurs d'écran (« la commande », « l'empreinte »…). */
+  /** Ce qui est copié, pour les lecteurs d'écran (« la commande »…). */
   what: string;
 }
 
