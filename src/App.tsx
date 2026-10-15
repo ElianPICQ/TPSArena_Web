@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { About } from './components/About';
+import { Companion } from './components/Companion';
 import { Controls } from './components/Controls';
 import { Downloads } from './components/Downloads';
 import { Footer } from './components/Footer';
@@ -23,6 +24,7 @@ export function App() {
         <About />
         <Gallery state={state} />
         <Downloads state={state} detected={platform} />
+        <Companion />
         <Controls />
       </main>
       <Footer />

@@ -6,6 +6,7 @@ const LINKS = [
   { href: '#captures', label: 'Captures' },
   { href: '#telechargements', label: 'Téléchargements' },
   { href: '#commandes', label: 'Commandes' },
+  { href: '/app/', label: 'Mes stats' },
 ];
 
 export function Nav() {
@@ -33,7 +34,7 @@ export function Nav() {
       </a>
       <div className="nav__inner">
         <a className="nav__brand" href="#accueil" onClick={() => setOpen(false)}>
-          ARENA <span>TPS</span>
+          TPS <span>ARENA</span>
         </a>
         <button
           type="button"

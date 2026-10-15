@@ -10,9 +10,9 @@ const ROOT = import.meta.dirname;
 const RELEASES = resolve(ROOT, 'releases');
 const SCREENSHOTS = resolve(ROOT, 'screenshots');
 const BUILDS = {
-  windows: ['ArenaTPS.exe', '.exe'],
-  linux: ['ArenaTPS.x86_64', '.x86_64'],
-  macos: ['ArenaTPS.zip', '.zip'],
+  windows: ['TPSArena.exe', '.exe'],
+  linux: ['TPSArena.x86_64', '.x86_64'],
+  macos: ['TPSArena.zip', '.zip'],
 } as const;
 const IMAGE = /\.(png|jpe?g|webp|avif|gif)$/i;
 

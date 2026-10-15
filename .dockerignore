@@ -6,3 +6,4 @@ screenshots
 *.log
 README.md
 .env
+certs

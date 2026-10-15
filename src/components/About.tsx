@@ -102,7 +102,7 @@ export function About() {
         <p className="section__eyebrow">Présentation</p>
         <h2 className="section__title">Chacun pour soi</h2>
         <p className="section__lead">
-          Arena TPS est un match à mort en vue à la troisième personne. Jusqu’à 16 joueurs s’affrontent,
+          TPS Arena est un match à mort en vue à la troisième personne. Jusqu’à 16 joueurs s’affrontent,
           des bots complètent la partie, et au bout de 3 minutes le meilleur score l’emporte. Tirs à la tête,
           grenades et bonus à ramasser ; après chaque apparition, 3 secondes de protection pour revenir dans
           la bataille.

@@ -93,9 +93,9 @@ generate() {
 	{
 		printf '{"generated":"%s",' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 		printf '"builds":{'
-		printf '"windows":%s,' "$(build_json windows ArenaTPS.exe .exe)"
-		printf '"linux":%s,' "$(build_json linux ArenaTPS.x86_64 .x86_64)"
-		printf '"macos":%s' "$(build_json macos ArenaTPS.zip .zip)"
+		printf '"windows":%s,' "$(build_json windows TPSArena.exe .exe)"
+		printf '"linux":%s,' "$(build_json linux TPSArena.x86_64 .x86_64)"
+		printf '"macos":%s' "$(build_json macos TPSArena.zip .zip)"
 		printf '},"screenshots":%s}\n' "$(screenshots_json)"
 	} >"$tmp"
 	chmod 644 "$tmp"

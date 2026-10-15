@@ -16,17 +16,17 @@ export const PLATFORMS: PlatformInfo[] = [
   {
     id: 'windows',
     label: 'Windows',
-    expectedFile: 'ArenaTPS.exe',
+    expectedFile: 'TPSArena.exe',
   },
   {
     id: 'linux',
     label: 'Linux',
-    expectedFile: 'ArenaTPS.x86_64',
+    expectedFile: 'TPSArena.x86_64',
   },
   {
     id: 'macos',
     label: 'macOS',
-    expectedFile: 'ArenaTPS.zip',
+    expectedFile: 'TPSArena.zip',
   },
 ];
 

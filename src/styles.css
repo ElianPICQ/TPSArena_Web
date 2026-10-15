@@ -1149,6 +1149,10 @@ button.gallery__item:hover img {
   color: var(--text);
 }
 
+.companion__action {
+  margin-top: 16px;
+}
+
 /* ---------------------------------------------------------------- Coins biseautés */
 
 /* Comme les StyleBox du jeu (neon_theme.tres, corner_detail = 1) : coins haut-gauche et

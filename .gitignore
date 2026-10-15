@@ -9,3 +9,7 @@ releases/*/*
 !releases/*/.gitkeep
 screenshots/*
 !screenshots/.gitkeep
+
+# Certificat HTTPS et clé (scripts/certificat.sh) : propres à chaque machine, jamais versionnés.
+certs/*
+!certs/.gitkeep

@@ -1,16 +1,36 @@
 services:
   site:
     build: .
-    image: arena-tps-site:latest
-    container_name: arena-tps-site
+    image: tps-arena-site:latest
+    container_name: tps-arena-site
     restart: unless-stopped
     init: true
     ports:
       # Port de l'hôte (8080 par défaut) ; nginx écoute sur 80 dans le conteneur.
       - "${SITE_PORT:-8080}:80"
+      # HTTPS (8443 par défaut), actif seulement si certs/ contient le certificat mkcert.
+      - "${SITE_HTTPS_PORT:-8443}:443"
     environment:
       # Délai (en secondes) entre deux vérifications des dossiers montés ; 0 = au démarrage seulement.
       MANIFEST_REFRESH: "30"
+      # Port HTTPS vu des joueurs, pour rediriger /app/ de HTTP vers HTTPS.
+      SITE_HTTPS_PORT: ${SITE_HTTPS_PORT:-8443}
+      # web-bff du back (backend/services/web-bff), joint sur le réseau partagé tpsarena-web.
+      WEB_BFF_UPSTREAM: ${WEB_BFF_UPSTREAM:-web-bff:8006}
+      # Real-time du back (WebSocket du chat), joint sur le même réseau.
+      REALTIME_UPSTREAM: ${REALTIME_UPSTREAM:-realtime:8005}
     volumes:
       - ./releases:/srv/releases:ro
       - ./screenshots:/srv/screenshots:ro
+      # Certificat et clé du site (scripts/certificat.sh) + certificat public de la CA.
+      # Jamais la clé de la CA (rootCA-key.pem), qui reste dans le dossier de mkcert.
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - default
+      - web
+
+networks:
+  # Partagé avec le back (backend/services/web-bff/compose.yaml) : nginx y joint le web-bff
+  # pour /api/. Le premier des deux projets lancé crée le réseau ; la vitrine marche sans le back.
+  web:
+    name: tpsarena-web
