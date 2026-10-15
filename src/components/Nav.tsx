@@ -6,6 +6,7 @@ const LINKS = [
   { href: '#captures', label: 'Captures' },
   { href: '#telechargements', label: 'Téléchargements' },
   { href: '#commandes', label: 'Commandes' },
+  { href: '/app/', label: 'Mes stats' },
 ];
 
 export function Nav() {
