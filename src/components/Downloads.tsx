@@ -2,7 +2,7 @@ import type { Build, ManifestState } from '../lib/manifest';
 import { buildUrl, formatDate, formatSize } from '../lib/manifest';
 import type { Platform, PlatformInfo } from '../lib/platforms';
 import { PLATFORMS, shellArg } from '../lib/platforms';
-import { CommandLine, CopyButton } from './CopyButton';
+import { CommandLine } from './CopyButton';
 import { DownloadIcon, PlatformIcon } from './Icons';
 
 function PlatformNotes({ platform, file }: { platform: Platform; file: string }) {
@@ -82,20 +82,6 @@ function DownloadCard({ info, build, loading, featured }: CardProps) {
             <DownloadIcon /> Télécharger
           </a>
           <PlatformNotes platform={info.id} file={build.file} />
-          <details className="verify">
-            <summary>Vérifier le fichier</summary>
-            <div className="verify__body">
-              <p className="verify__label">Empreinte SHA-256 attendue</p>
-              <div className="command command--hash">
-                <code>{build.sha256}</code>
-                <CopyButton text={build.sha256} what="l’empreinte SHA-256" />
-              </div>
-              <p className="verify__label">
-                Dans le dossier du fichier ({info.verifyShell}), comparer avec :
-              </p>
-              <CommandLine command={info.verifyCommand(build.file)} />
-            </div>
-          </details>
         </>
       ) : (
         <div className="dl-card__soon">

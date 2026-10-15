@@ -4,15 +4,6 @@ export interface PlatformInfo {
   id: Platform;
   label: string;
   expectedFile: string;
-  /** Commande qui affiche le SHA-256 du fichier téléchargé, à lancer dans son dossier. */
-  verifyCommand: (file: string) => string;
-  verifyShell: string;
-}
-
-/** Chemin PowerShell entre apostrophes (une apostrophe s'y écrit en double). */
-function psArg(file: string): string {
-  const path = `.\\${file}`;
-  return /^[\w.\\+-]+$/.test(path) ? path : `'${path.replace(/'/g, "''")}'`;
 }
 
 /** Nom de fichier tel qu'il doit être tapé dans un terminal (entre guillemets si besoin). */
@@ -26,22 +17,16 @@ export const PLATFORMS: PlatformInfo[] = [
     id: 'windows',
     label: 'Windows',
     expectedFile: 'ArenaTPS.exe',
-    verifyCommand: (file) => `Get-FileHash ${psArg(file)} -Algorithm SHA256`,
-    verifyShell: 'PowerShell',
   },
   {
     id: 'linux',
     label: 'Linux',
     expectedFile: 'ArenaTPS.x86_64',
-    verifyCommand: (file) => `sha256sum ${shellArg(file)}`,
-    verifyShell: 'Terminal',
   },
   {
     id: 'macos',
     label: 'macOS',
     expectedFile: 'ArenaTPS.zip',
-    verifyCommand: (file) => `shasum -a 256 ${shellArg(file)}`,
-    verifyShell: 'Terminal',
   },
 ];
 

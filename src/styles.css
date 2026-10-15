@@ -991,12 +991,6 @@ button.gallery__item:hover img {
   scrollbar-width: thin;
   scrollbar-color: rgba(46, 227, 235, 0.35) transparent;
 }
-.command--hash code {
-  white-space: normal;
-  word-break: break-all;
-  font-size: 13px;
-  color: var(--green);
-}
 .copy-btn {
   flex: none;
   display: inline-flex;
@@ -1027,31 +1021,6 @@ button.gallery__item:hover img {
 .copy-btn--fail {
   border-color: var(--red);
   color: var(--red);
-}
-
-.verify {
-  border-top: 1px solid var(--panel-border);
-  padding-top: 10px;
-}
-.verify summary {
-  cursor: pointer;
-  font-weight: 700;
-  color: var(--muted);
-  border-radius: var(--radius);
-  list-style-position: inside;
-}
-.verify summary:hover,
-.verify[open] summary {
-  color: var(--cyan);
-}
-.verify__body {
-  display: grid;
-  gap: 8px;
-  margin-top: 10px;
-}
-.verify__label {
-  font-size: 15px;
-  color: var(--muted);
 }
 
 /* ---------------------------------------------------------------- Commandes */
