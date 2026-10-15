@@ -885,7 +885,7 @@ button.gallery__item:hover img {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  align-items: stretch;
+  align-items: start;
 }
 .dl-card {
   position: relative;
@@ -955,7 +955,23 @@ button.gallery__item:hover img {
 .dl-card__btn {
   width: 100%;
 }
+.dl-card__more {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 10px;
+}
+.dl-card__more summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--muted);
+  border-radius: var(--radius);
+  list-style-position: inside;
+}
+.dl-card__more summary:hover,
+.dl-card__more[open] summary {
+  color: var(--cyan);
+}
 .dl-card__notes {
+  margin-top: 10px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;

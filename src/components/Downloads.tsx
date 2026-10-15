@@ -81,7 +81,10 @@ function DownloadCard({ info, build, loading, featured }: CardProps) {
           >
             <DownloadIcon /> Télécharger
           </a>
-          <PlatformNotes platform={info.id} file={build.file} />
+          <details className="dl-card__more">
+            <summary>Comment lancer le jeu</summary>
+            <PlatformNotes platform={info.id} file={build.file} />
+          </details>
         </>
       ) : (
         <div className="dl-card__soon">
