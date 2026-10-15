@@ -223,8 +223,8 @@ main:focus {
   gap: 10px;
   min-height: 44px;
   padding: 8px 18px;
+  --bc: var(--btn-border);
   border: 1px solid var(--btn-border);
-  border-radius: var(--radius);
   background: var(--btn-bg);
   color: var(--text);
   font-family: var(--font-text);
@@ -244,7 +244,7 @@ main:focus {
   flex: none;
 }
 .btn:hover {
-  border-color: var(--cyan);
+  --bc: var(--cyan);
   color: var(--cyan);
   background: var(--btn-bg-hover);
   box-shadow:
@@ -256,7 +256,7 @@ main:focus {
   color: #fff;
 }
 .btn--primary {
-  border-color: rgba(46, 227, 235, 0.6);
+  --bc: rgba(46, 227, 235, 0.6);
   box-shadow: 0 0 10px rgba(46, 227, 235, 0.15);
 }
 .btn--xl {
@@ -266,14 +266,14 @@ main:focus {
 }
 .btn--disabled {
   background: rgba(15, 18, 26, 0.8);
-  border-color: rgba(255, 255, 255, 0.06);
+  --bc: rgba(255, 255, 255, 0.06);
   color: var(--muted);
   cursor: not-allowed;
   box-shadow: none;
 }
 .btn--disabled:hover {
   background: rgba(15, 18, 26, 0.8);
-  border-color: rgba(255, 255, 255, 0.06);
+  --bc: rgba(255, 255, 255, 0.06);
   color: var(--muted);
   box-shadow: none;
 }
@@ -285,8 +285,9 @@ main:focus {
 
 .panel {
   background: var(--panel);
+  --bc: var(--panel-border);
+  --cut: 12px;
   border: 1px solid var(--panel-border);
-  border-radius: var(--radius-panel);
   padding: 16px 18px;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
@@ -394,8 +395,8 @@ kbd {
   height: 44px;
   align-items: center;
   justify-content: center;
+  --bc: var(--btn-border);
   border: 1px solid var(--btn-border);
-  border-radius: var(--radius);
   background: var(--btn-bg);
   color: var(--text);
   font-size: 22px;
@@ -403,7 +404,7 @@ kbd {
 }
 .nav__toggle:hover {
   color: var(--cyan);
-  border-color: var(--cyan);
+  --bc: var(--cyan);
 }
 
 @media (max-width: 760px) {
@@ -897,15 +898,15 @@ button.gallery__item:hover img {
   height: 48px;
   display: grid;
   place-items: center;
+  --bc: var(--btn-border);
   border: 1px solid var(--btn-border);
-  border-radius: var(--radius);
   background: var(--btn-bg);
   color: var(--text);
   font-size: 26px;
   cursor: pointer;
 }
 .lightbox__btn:hover {
-  border-color: var(--cyan);
+  --bc: var(--cyan);
   color: var(--cyan);
   box-shadow: 0 0 12px rgba(46, 227, 235, 0.3);
 }
@@ -941,7 +942,7 @@ button.gallery__item:hover img {
   padding: 20px;
 }
 .dl-card--featured {
-  border-color: rgba(46, 227, 235, 0.65);
+  --bc: rgba(46, 227, 235, 0.65);
   box-shadow:
     0 0 24px rgba(46, 227, 235, 0.18),
     inset 0 0 18px rgba(46, 227, 235, 0.05);
@@ -952,8 +953,8 @@ button.gallery__item:hover img {
 }
 .dl-card__badge {
   position: absolute;
-  top: -12px;
-  right: 16px;
+  top: 14px;
+  right: 14px;
   padding: 1px 10px;
   border-radius: var(--radius);
   background: var(--cyan);
@@ -1058,8 +1059,8 @@ button.gallery__item:hover img {
   gap: 6px;
   min-height: 34px;
   padding: 4px 10px;
+  --bc: var(--btn-border);
   border: 1px solid var(--btn-border);
-  border-radius: var(--radius);
   background: var(--btn-bg);
   color: var(--text);
   font-family: var(--font-text);
@@ -1068,18 +1069,18 @@ button.gallery__item:hover img {
   cursor: pointer;
 }
 .copy-btn:hover {
-  border-color: var(--cyan);
+  --bc: var(--cyan);
   color: var(--cyan);
 }
 .copy-btn:active {
   background: var(--btn-pressed);
 }
 .copy-btn--ok {
-  border-color: var(--green);
+  --bc: var(--green);
   color: var(--green);
 }
 .copy-btn--fail {
-  border-color: var(--red);
+  --bc: var(--red);
   color: var(--red);
 }
 
@@ -1146,6 +1147,64 @@ button.gallery__item:hover img {
   font-size: 14px;
   letter-spacing: 0.06em;
   color: var(--text);
+}
+
+/* ---------------------------------------------------------------- Coins biseautés */
+
+/* Comme les StyleBox du jeu (neon_theme.tres, corner_detail = 1) : coins haut-gauche et
+   bas-droit coupés en biseau, 12 px pour les panneaux, 8 px pour les boutons. Le biseau
+   découpe aussi la bordure : ::after redessine les deux diagonales de la couleur --bc. */
+.panel,
+.btn,
+.copy-btn,
+.nav__toggle,
+.lightbox__btn {
+  --cut: 8px;
+  position: relative;
+  border-color: var(--bc);
+  border-radius: 0;
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+.panel {
+  --cut: 12px;
+}
+.lightbox__btn {
+  position: absolute;
+}
+.panel::after,
+.btn::after,
+.copy-btn::after,
+.nav__toggle::after,
+.lightbox__btn::after {
+  /* Tracé dans la boîte intérieure (sous la bordure de 1 px), pour ne pas faire
+     déborder un panneau défilant : la diagonale y fait cut - 2 px. */
+  --diag: calc(var(--cut) - 2px);
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom right, transparent 50%, var(--bc) 50%, var(--bc) calc(50% + 1.2px), transparent calc(50% + 1.2px))
+      0 0 / var(--diag) var(--diag) no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--bc) 50%, var(--bc) calc(50% + 1.2px), transparent calc(50% + 1.2px))
+      100% 100% / var(--diag) var(--diag) no-repeat;
+}
+.panel.class-card {
+  border-top-color: var(--accent);
+}
+/* Le contour de focus est tracé à l'intérieur : à l'extérieur, le biseau le couperait. */
+.btn:focus-visible,
+.copy-btn:focus-visible,
+.nav__toggle:focus-visible,
+.lightbox__btn:focus-visible {
+  outline-offset: -5px;
 }
 
 /* ---------------------------------------------------------------- Responsive */
