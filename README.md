@@ -76,6 +76,12 @@ Pour connaître l'adresse IP à communiquer aux joueurs :
 hostname -I | awk '{print $1}'
 ```
 
+Sous Windows (PowerShell) :
+
+```powershell
+(Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -and $_.NetAdapter.Status -eq "Up" }).IPv4Address.IPAddress
+```
+
 Sur un réseau en DHCP (Wi-Fi de l'école notamment), cette adresse peut changer d'un jour
 à l'autre : la vérifier avant chaque séance.
 
@@ -89,6 +95,9 @@ le back du jeu utilise 8000 à 8006 et 8025. Pour en choisir un autre, créer un
 echo "SITE_PORT=8090" > .env
 docker compose up -d
 ```
+
+Sous Windows, écrire le fichier avec `Set-Content .env "SITE_PORT=8090"` : dans
+PowerShell 5.1, `>` l'écrit en UTF-16, que Docker Compose ne lit pas correctement.
 
 Le port HTTPS (app mobile) est 8443 par défaut, `SITE_HTTPS_PORT` dans le même fichier.
 
@@ -147,6 +156,8 @@ Le certificat du site est lié à l'IP. Sur le Wi-Fi de l'école, relancer simpl
 scripts/certificat.sh             # ou : scripts/certificat.sh 10.0.0.12
 ```
 
+Sous Windows : `.\scripts\certificat.ps1` (ou `.\scripts\certificat.ps1 10.0.0.12`).
+
 La CA ne change pas : **rien à refaire sur les téléphones**. L'app installée garde son
 adresse : si l'IP a changé, l'ouvrir de nouveau depuis la vitrine.
 
@@ -193,6 +204,13 @@ cet état, copier sous un autre nom puis renommer (`mv` est instantané) :
 
 ```sh
 cp TPSArena.exe releases/windows/.TPSArena.exe.tmp && mv releases/windows/.TPSArena.exe.tmp releases/windows/TPSArena.exe
+```
+
+Sous Windows (PowerShell) :
+
+```powershell
+Copy-Item TPSArena.exe releases/windows/.TPSArena.exe.tmp
+Move-Item -Force releases/windows/.TPSArena.exe.tmp releases/windows/TPSArena.exe
 ```
 
 Une plateforme sans fichier s'affiche grisée avec « Bientôt disponible ».
